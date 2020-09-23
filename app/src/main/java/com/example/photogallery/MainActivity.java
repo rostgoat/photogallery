@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     public void takePhoto(View v) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there is a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+        //Todo: Commenting this out for now to allow pictures to work. Not sure why it is always null
+        //if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
@@ -57,16 +58,17 @@ public class MainActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.example.myapplication.fileprovider", photoFile);
+                //ToDo: Why is this now throwing an error? Caused by: java.lang.IllegalArgumentException: Couldn't find meta-data for provider with authority com.example.photogallery
+                Uri photoURI = FileProvider.getUriForFile(this, "com.example.photogallery", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
-        }
+        //}
     }
 
     private ArrayList<String> findPhotos(Date startTimestamp, Date endTimestamp, String keywords) {
         File file = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath(), "/Android/data/com.example.myapplication/files/Pictures");
+                .getAbsolutePath(), "/Android/data/com.example.photogallery/files/Pictures");
         ArrayList<String> photos = new ArrayList<String>();
         File[] fList = file.listFiles();
         if (fList != null) {
@@ -81,22 +83,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void scrollPhotos(View v) {
-        updatePhoto(photos.get(index), ((EditText) findViewById(R.id.etCaption)).getText().toString());
-        switch (v.getId()) {
-            case R.id.btnPrev:
-                if (index > 0) {
-                    index--;
-                }
-                break;
-            case R.id.btnNext:
-                if (index < (photos.size() - 1)) {
-                    index++;
-                }
-                break;
-            default:
-                break;
+        if (photos.size() != 0){
+            updatePhoto(photos.get(index), ((EditText) findViewById(R.id.etCaption)).getText().toString());
+            switch (v.getId()) {
+                case R.id.btnPrev:
+                    if (index > 0) {
+                        index--;
+                    }
+                    break;
+                case R.id.btnNext:
+                    if (index < (photos.size() - 1)) {
+                        index++;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            displayPhoto(photos.get(index));
         }
-        displayPhoto(photos.get(index));
     }
 
     private void displayPhoto(String path) {
