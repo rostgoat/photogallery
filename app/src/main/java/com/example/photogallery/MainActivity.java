@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 //ToDo: Why is this now throwing an error? Caused by: java.lang.IllegalArgumentException: Couldn't find meta-data for provider with authority com.example.photogallery
-                Uri photoURI = FileProvider.getUriForFile(this, "com.example.photogallery", photoFile);
+               // Uri photoURI = FileProvider.getUriForFile(this, "com.example.photogallery", photoFile);
+                Uri photoURI = FileProvider.getUriForFile(this, "com.example.photogallery.fileprovider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
