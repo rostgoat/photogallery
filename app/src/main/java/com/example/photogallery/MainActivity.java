@@ -1,8 +1,13 @@
 package com.example.photogallery;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,7 +37,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         photos = findPhotos(new Date(Long.MIN_VALUE), new Date(), "");
+
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[] {
+                    Manifest.permission.CAMERA
+            }, 1000);
+        }
+
         if (photos.size() == 0) {
             displayPhoto(null);
         } else {
@@ -58,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                //ToDo: Why is this now throwing an error? Caused by: java.lang.IllegalArgumentException: Couldn't find meta-data for provider with authority com.example.photogallery
-               // Uri photoURI = FileProvider.getUriForFile(this, "com.example.photogallery", photoFile);
                 Uri photoURI = FileProvider.getUriForFile(this, "com.example.photogallery.fileprovider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
