@@ -1,0 +1,23 @@
+name: Android Build
+
+on: pull_request
+
+jobs:
+  test:
+    name: Run Test Suite
+    runs-on: macos-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 23
+          target: default
+          arch: x86
+          profile: Nexus 6
+          script: ./gradlew connectedCheck --stacktrace
+
+      - name: Build Project
+        run: ./gradlew assemble

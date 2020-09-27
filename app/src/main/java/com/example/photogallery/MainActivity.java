@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchPhoto(View view) {
-        Intent searchIntent = new Intent(this, SearchActivity.class);
+         Intent searchIntent = new Intent(this, SearchActivity.class);
         startActivityForResult(searchIntent, SEARCH_ACTIVITY_REQUEST_CODE);
     }
 
