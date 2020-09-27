@@ -1,8 +1,13 @@
 package com.example.photogallery;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,7 +37,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         photos = findPhotos(new Date(Long.MIN_VALUE), new Date(), "");
+
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[] {
+                    Manifest.permission.CAMERA
+            }, 1000);
+        }
+
         if (photos.size() == 0) {
             displayPhoto(null);
         } else {
@@ -48,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
     public void takePhoto(View v) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there is a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+        //Todo: Commenting this out for now to allow pictures to work. Not sure why it is always null
+        //if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
@@ -57,16 +71,16 @@ public class MainActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.example.myapplication.fileprovider", photoFile);
+                Uri photoURI = FileProvider.getUriForFile(this, "com.example.photogallery.fileprovider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
-        }
+        //}
     }
 
     private ArrayList<String> findPhotos(Date startTimestamp, Date endTimestamp, String keywords) {
         File file = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath(), "/Android/data/com.example.myapplication/files/Pictures");
+                .getAbsolutePath(), "/Android/data/com.example.photogallery/files/Pictures");
         ArrayList<String> photos = new ArrayList<String>();
         File[] fList = file.listFiles();
         if (fList != null) {
@@ -81,22 +95,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void scrollPhotos(View v) {
-        updatePhoto(photos.get(index), ((EditText) findViewById(R.id.etCaption)).getText().toString());
-        switch (v.getId()) {
-            case R.id.btnPrev:
-                if (index > 0) {
-                    index--;
-                }
-                break;
-            case R.id.btnNext:
-                if (index < (photos.size() - 1)) {
-                    index++;
-                }
-                break;
-            default:
-                break;
+        if (photos.size() != 0){
+            updatePhoto(photos.get(index), ((EditText) findViewById(R.id.etCaption)).getText().toString());
+            switch (v.getId()) {
+                case R.id.btnPrev:
+                    if (index > 0) {
+                        index--;
+                    }
+                    break;
+                case R.id.btnNext:
+                    if (index < (photos.size() - 1)) {
+                        index++;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            displayPhoto(photos.get(index));
         }
-        displayPhoto(photos.get(index));
     }
 
     private void displayPhoto(String path) {
