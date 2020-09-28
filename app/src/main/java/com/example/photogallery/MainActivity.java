@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +52,31 @@ public class MainActivity extends AppCompatActivity {
         } else {
             displayPhoto(photos.get(index));
         }
+
+    }
+
+
+    public void sharingToSocialMedia(View v) {
+
+        try{
+            File file = new File(photos.get(index));
+            Uri bmpUri = FileProvider.getUriForFile(this, "com.example.photogallery.fileprovider", file);
+            //Todo: Commenting this out for now, uncomment it to show it the Caption as well, works on Twitter
+//            EditText mEdit   = (EditText)findViewById(R.id.etCaption);
+//            String text = mEdit.getText().toString();
+
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+//            shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
+            shareIntent.setType("image/*");
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(Intent.createChooser(shareIntent, "Share images using"));
+
+        }catch (android.content.ActivityNotFoundException ex){
+            Toast.makeText(getApplicationContext(), "Please install the application first", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public void searchPhoto(View view) {
