@@ -14,7 +14,7 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         int result = 4;
         System.out.println("result: " + result);
-        System.out.println("some random text: ");
+        System.out.println("some random text and more: ");
         assertEquals(result, 2 + 2);
     }
 }
