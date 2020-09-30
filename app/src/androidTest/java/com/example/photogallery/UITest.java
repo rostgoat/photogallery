@@ -1,5 +1,12 @@
 package com.example.photogallery;
 
+import android.app.Activity;
+import android.app.Application;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+
+import androidx.core.content.FileProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
@@ -7,6 +14,9 @@ import androidx.test.rule.ActivityTestRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.File;
+import java.io.IOException;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
@@ -27,9 +37,10 @@ public class UITest {
     public ActivityTestRule<MainActivity> activityRule =
             new ActivityTestRule<>(MainActivity.class);
 
-
     @Test
     public void searchForAnImageInGivenTimeRange(){
+        MainActivity ma = activityRule.getActivity();
+        ma.takePhoto(ma.findViewById(R.id.constraintLayoutLayout));
         onView(withId(R.id.btnSearch)).perform(click());
         onView(withId(R.id.etFromDateTime)).perform(clearText());
         onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-26"), closeSoftKeyboard());
@@ -40,34 +51,34 @@ public class UITest {
         onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("115355"))));
     }
 
-    @Test
-    public void searchForAnImageInGivenTimeRangeUsingCaptionFilter(){
-        onView(withId(R.id.btnSearch)).perform(click());
-        onView(withId(R.id.etFromDateTime)).perform(clearText());
-        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-22"), closeSoftKeyboard());
-        onView(withId(R.id.etToDateTime)).perform(clearText());
-        onView(withId(R.id.etToDateTime)).perform(typeText("2020-09-23"), closeSoftKeyboard());
-        onView(withId(R.id.etKeywords)).perform(typeText("TV Animation"), closeSoftKeyboard());
-        onView(withId(R.id.go)).perform(click());
-        onView(withId(R.id.etCaption)).check(matches(withText("TV Animation")));
-        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("115506"))));
-    }
-
-    @Test
-    public void searchForAnImageInGivenTimeRangeUsingCaptionFilterAndScrollRight(){
-        onView(withId(R.id.btnSearch)).perform(click());
-        onView(withId(R.id.etFromDateTime)).perform(clearText());
-        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-22"), closeSoftKeyboard());
-        onView(withId(R.id.etToDateTime)).perform(clearText());
-        onView(withId(R.id.etToDateTime)).perform(typeText("2020-09-23"), closeSoftKeyboard());
-        onView(withId(R.id.etKeywords)).perform(typeText("TV Animation"), closeSoftKeyboard());
-        onView(withId(R.id.go)).perform(click());
-        onView(withId(R.id.etCaption)).check(matches(withText("TV Animation")));
-        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("115506"))));
-        onView(withId(R.id.btnNext)).perform(click());
-        onView(withId(R.id.etCaption)).check(matches(withText("TV Animation - Red icon")));
-        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("115839"))));
-    }
+//    @Test
+//    public void searchForAnImageInGivenTimeRangeUsingCaptionFilter(){
+//        onView(withId(R.id.btnSearch)).perform(click());
+//        onView(withId(R.id.etFromDateTime)).perform(clearText());
+//        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-22"), closeSoftKeyboard());
+//        onView(withId(R.id.etToDateTime)).perform(clearText());
+//        onView(withId(R.id.etToDateTime)).perform(typeText("2020-09-23"), closeSoftKeyboard());
+//        onView(withId(R.id.etKeywords)).perform(typeText("TV Animation"), closeSoftKeyboard());
+//        onView(withId(R.id.go)).perform(click());
+//        onView(withId(R.id.etCaption)).check(matches(withText("TV Animation")));
+//        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("115506"))));
+//    }
+//
+//    @Test
+//    public void searchForAnImageInGivenTimeRangeUsingCaptionFilterAndScrollRight(){
+//        onView(withId(R.id.btnSearch)).perform(click());
+//        onView(withId(R.id.etFromDateTime)).perform(clearText());
+//        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-22"), closeSoftKeyboard());
+//        onView(withId(R.id.etToDateTime)).perform(clearText());
+//        onView(withId(R.id.etToDateTime)).perform(typeText("2020-09-23"), closeSoftKeyboard());
+//        onView(withId(R.id.etKeywords)).perform(typeText("TV Animation"), closeSoftKeyboard());
+//        onView(withId(R.id.go)).perform(click());
+//        onView(withId(R.id.etCaption)).check(matches(withText("TV Animation")));
+//        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("115506"))));
+//        onView(withId(R.id.btnNext)).perform(click());
+//        onView(withId(R.id.etCaption)).check(matches(withText("TV Animation - Red icon")));
+//        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("115839"))));
+//    }
 
 }
 

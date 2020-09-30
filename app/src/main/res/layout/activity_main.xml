@@ -92,14 +92,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/ivGallery"
+        android:layout_alignLeft="@+id/ivGallery"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="177dp"
+        android:layout_marginStart="233dp"
+        android:layout_marginLeft="233dp"
         android:layout_marginBottom="64dp"
         android:onClick="searchPhoto"
         android:text="search"
         tools:layout_editor_absoluteX="291dp"
-        tools:layout_editor_absoluteY="635dp"
-        android:layout_alignLeft="@+id/ivGallery"
-        android:layout_marginLeft="177dp" />
+        tools:layout_editor_absoluteY="635dp" />
 </RelativeLayout>
