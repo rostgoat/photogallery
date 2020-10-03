@@ -39,44 +39,44 @@ public class UITest {
 
     @Test
     public void searchForAnImageInGivenTimeRange(){
-//        onView(withId(R.id.btnSearch)).perform(click());
-//        onView(withId(R.id.etFromDateTime)).perform(clearText());
-//        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-26"), closeSoftKeyboard());
-//        onView(withId(R.id.etToDateTime)).perform(clearText());
-//        onView(withId(R.id.etToDateTime)).perform(typeText("2020-09-27"), closeSoftKeyboard());
-//        onView(withId(R.id.go)).perform(click());
-//        onView(withId(R.id.etCaption)).check(matches(withText("Cat")));
-//        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("115355"))));
+        onView(withId(R.id.btnSearch)).perform(click());
+        onView(withId(R.id.etFromDateTime)).perform(clearText());
+        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-30"), closeSoftKeyboard());
+        onView(withId(R.id.etToDateTime)).perform(clearText());
+        onView(withId(R.id.etToDateTime)).perform(typeText("2020-09-30"), closeSoftKeyboard());
+        onView(withId(R.id.go)).perform(click());
+        onView(withId(R.id.etCaption)).check(matches(withText("kitchen")));
+        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("215821"))));
     }
     @Test
     public void searchForAnImageInGivenTimeRangeUsingCaptionFilter(){
-//        onView(withId(R.id.btnSearch)).perform(click());
-//        onView(withId(R.id.etFromDateTime)).perform(clearText());
-//        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-22"), closeSoftKeyboard());
-//        onView(withId(R.id.etToDateTime)).perform(clearText());
-//        onView(withId(R.id.etToDateTime)).perform(typeText("2020-09-23"), closeSoftKeyboard());
-//        onView(withId(R.id.etKeywords)).perform(typeText("TV Animation"), closeSoftKeyboard());
-//        onView(withId(R.id.go)).perform(click());
-//        onView(withId(R.id.etCaption)).check(matches(withText("TV Animation")));
-//        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("115506"))));
+        onView(withId(R.id.btnSearch)).perform(click());
+        onView(withId(R.id.etFromDateTime)).perform(clearText());
+        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-30"), closeSoftKeyboard());
+        onView(withId(R.id.etToDateTime)).perform(clearText());
+        onView(withId(R.id.etToDateTime)).perform(typeText("2020-10-01"), closeSoftKeyboard());
+        onView(withId(R.id.etKeywords)).perform(typeText("dog"), closeSoftKeyboard());
+        onView(withId(R.id.go)).perform(click());
+        onView(withId(R.id.etCaption)).check(matches(withText("dog")));
+        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("221336"))));
 
     }
 
     @Test
     public void searchForAnImageInGivenTimeRangeUsingCaptionFilterAndScrollRight(){
 
-//        onView(withId(R.id.btnSearch)).perform(click());
-//        onView(withId(R.id.etFromDateTime)).perform(clearText());
-//        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-22"), closeSoftKeyboard());
-//        onView(withId(R.id.etToDateTime)).perform(clearText());
-//        onView(withId(R.id.etToDateTime)).perform(typeText("2020-09-23"), closeSoftKeyboard());
-//        onView(withId(R.id.etKeywords)).perform(typeText("TV Animation"), closeSoftKeyboard());
-//        onView(withId(R.id.go)).perform(click());
-//        onView(withId(R.id.etCaption)).check(matches(withText("TV Animation")));
-//        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("115506"))));
-//        onView(withId(R.id.btnNext)).perform(click());
-//        onView(withId(R.id.etCaption)).check(matches(withText("TV Animation - Red icon")));
-//        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("115839"))));
+        onView(withId(R.id.btnSearch)).perform(click());
+        onView(withId(R.id.etFromDateTime)).perform(clearText());
+        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-30"), closeSoftKeyboard());
+        onView(withId(R.id.etToDateTime)).perform(clearText());
+        onView(withId(R.id.etToDateTime)).perform(typeText("2020-30-03"), closeSoftKeyboard());
+        onView(withId(R.id.etKeywords)).perform(typeText("door"), closeSoftKeyboard());
+        onView(withId(R.id.go)).perform(click());
+        onView(withId(R.id.etCaption)).check(matches(withText("door")));
+        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("215945"))));
+        onView(withId(R.id.btnNext)).perform(click());
+        onView(withId(R.id.etCaption)).check(matches(withText("kitchen door")));
+        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("152757"))));
     }
 }
 
