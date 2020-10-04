@@ -148,5 +148,6 @@
         android:layout_marginTop="6dp"
         android:layout_marginEnd="21dp"
         android:layout_marginRight="21dp"
-        android:text="TextView" />
+        android:text="Location" />
+
 </RelativeLayout>
