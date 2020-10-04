@@ -9,6 +9,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -155,6 +156,12 @@ public class MainActivity extends AppCompatActivity {
             et.setText(attr[1]);
             tv.setText(attr[2]);
         }
+
+//        try {
+//            addLocationTagging(path);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public File createImageFile() throws IOException {
@@ -207,5 +214,20 @@ public class MainActivity extends AppCompatActivity {
             File from = new File(path);
             from.renameTo(to);
         }
+    }
+
+    private void addLocationTagging(String path) throws IOException {
+
+        ExifInterface exif = new ExifInterface(path);
+
+        String lat = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+
+        String lng = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+
+        TextView locationText = (TextView) findViewById(R.id.locationText);
+        locationText.setText("Latitude: " +lat + ", Longitude: " + lng);
+
+        Toast.makeText(getApplicationContext(),", Latitude: " +lat + "Longitude: " + lng,Toast.LENGTH_SHORT).show();
+
     }
 }
