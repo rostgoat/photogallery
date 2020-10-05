@@ -5,37 +5,103 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
+
+    <EditText
+        android:id="@+id/etBottomRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etToDateTime"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="105dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginRight="27dp"
+        android:layout_toEndOf="@+id/topLeft"
+        android:layout_toRightOf="@+id/topLeft"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
     <TextView
         android:id="@+id/tvFromDateTime"  android:text="From: "
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/etFromDateTime" android:layout_alignStart="@+id/btnCancel"
         android:textSize="24sp" />
+
     <EditText
-        android:id="@+id/etFromDateTime" android:inputType="date"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true" android:layout_alignParentTop="true"
-        android:layout_marginTop="38dp" android:ems="10" android:textSize="24sp" />
-    <TextView
-        android:id="@+id/tvToDateTime"  android:text="To: "
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" android:layout_alignStart="@+id/tvFromDateTime"
-        android:layout_marginTop="98dp" android:textSize="24sp" />
-    <EditText
-        android:id="@+id/etToDateTime" android:inputType="date"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tvToDateTime" android:layout_alignParentEnd="true"
-        android:layout_marginEnd="31dp" android:ems="10"
+        android:id="@+id/etFromDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="27dp"
+        android:ems="10"
+        android:inputType="date"
         android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tvToDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvFromDateTime"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="106dp"
+        android:text="To: "
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/etToDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvToDateTime"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="27dp"
+        android:ems="10"
+        android:inputType="date"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/topLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvToDateTime"
+        android:layout_marginTop="76dp"
+        android:text="Top Left:"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/bottomRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topLeft"
+        android:layout_marginTop="13dp"
+        android:text="Bottom Right:"
+        android:textSize="24sp" />
+
     <TextView
         android:id="@+id/tvKeywords" android:text="Keywords: "
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_alignStart="@+id/tvFromDateTime" android:layout_centerVertical="true"
         android:textSize="24sp" />
+
     <EditText
-        android:id="@+id/etKeywords" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_alignStart="@+id/go"
-        android:layout_centerVertical="true" android:ems="10"
+        android:id="@+id/etKeywords"
+        android:layout_width="255dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etTopLeft"
+        android:layout_alignStart="@+id/go"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="-65dp"
+        android:layout_marginTop="89dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginRight="27dp"
+        android:ems="10"
         android:textSize="24sp" />
+
     <Button
         android:id="@+id/btnCancel" android:text="Cancel" android:onClick="cancel"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -51,4 +117,22 @@
         android:layout_marginEnd="128dp"
         android:onClick="go"
         android:text="Go" />
+
+    <EditText
+        android:id="@+id/etTopLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etToDateTime"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="58dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginRight="27dp"
+        android:layout_toEndOf="@+id/topLeft"
+        android:layout_toRightOf="@+id/topLeft"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
 </RelativeLayout>
