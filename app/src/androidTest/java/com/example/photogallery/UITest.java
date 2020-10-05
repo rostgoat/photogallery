@@ -41,12 +41,13 @@ public class UITest {
     public void searchForAnImageInGivenTimeRange(){
         onView(withId(R.id.btnSearch)).perform(click());
         onView(withId(R.id.etFromDateTime)).perform(clearText());
-        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-30"), closeSoftKeyboard());
+        onView(withId(R.id.etFromDateTime)).perform(typeText("2020-10-04"), closeSoftKeyboard());
         onView(withId(R.id.etToDateTime)).perform(clearText());
-        onView(withId(R.id.etToDateTime)).perform(typeText("2020-09-30"), closeSoftKeyboard());
+        onView(withId(R.id.etToDateTime)).perform(typeText("2020-10-04"), closeSoftKeyboard());
+        onView(withId(R.id.etKeywords)).perform(typeText("Cat"), closeSoftKeyboard());
         onView(withId(R.id.go)).perform(click());
-        onView(withId(R.id.etCaption)).check(matches(withText("sofa")));
-        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("213710"))));
+        onView(withId(R.id.etCaption)).check(matches(withText("Cat")));
+        onView(withId(R.id.tvTimestamp)).check(matches(withText(containsString("164720"))));
     }
     @Test
     public void searchForAnImageInGivenTimeRangeUsingCaptionFilter(){
@@ -69,7 +70,7 @@ public class UITest {
         onView(withId(R.id.etFromDateTime)).perform(clearText());
         onView(withId(R.id.etFromDateTime)).perform(typeText("2020-09-30"), closeSoftKeyboard());
         onView(withId(R.id.etToDateTime)).perform(clearText());
-        onView(withId(R.id.etToDateTime)).perform(typeText("2020-30-03"), closeSoftKeyboard());
+        onView(withId(R.id.etToDateTime)).perform(typeText("2020-10-03"), closeSoftKeyboard());
         onView(withId(R.id.etKeywords)).perform(typeText("door"), closeSoftKeyboard());
         onView(withId(R.id.go)).perform(click());
         onView(withId(R.id.etCaption)).check(matches(withText("door")));
