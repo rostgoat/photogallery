@@ -34,9 +34,15 @@ public class SearchActivity extends AppCompatActivity {
         EditText from = (EditText) findViewById(R.id.etFromDateTime);
         EditText to = (EditText) findViewById(R.id.etToDateTime);
         EditText keywords = (EditText) findViewById(R.id.etKeywords);
+        EditText lat = (EditText) findViewById(R.id.etLatitude);
+        EditText lng = (EditText) findViewById(R.id.etLongitude);
+        EditText radius = (EditText) findViewById(R.id.etRadius);
         i.putExtra("STARTTIMESTAMP", from.getText() != null ? from.getText().toString() : "");
         i.putExtra("ENDTIMESTAMP", to.getText() != null ? to.getText().toString() : "");
         i.putExtra("KEYWORDS", keywords.getText() != null ? keywords.getText().toString() : "");
+        i.putExtra("LATITUDE", !lat.getText().toString().equals("") ? Double.parseDouble(String.valueOf(lat.getText())) : "");
+        i.putExtra("LONGITUDE", !lng.getText().toString().equals("") ? Double.parseDouble(String.valueOf(lng.getText())) : "");
+        i.putExtra("RADIUS", !radius.getText().toString().equals("") ? Integer.parseInt(String.valueOf(radius.getText())) : "");
         setResult(RESULT_OK, i);
         finish();
     }

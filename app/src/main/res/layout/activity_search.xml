@@ -27,7 +27,6 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="datetime"
             android:textSize="24sp" />
     </LinearLayout>
 
@@ -89,7 +88,7 @@
             android:textSize="24sp" />
 
         <EditText
-            android:id="@+id/etLattitude"
+            android:id="@+id/etLatitude"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:ems="10"

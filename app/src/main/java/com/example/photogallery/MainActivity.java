@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        photos = findPhotos(new Date(Long.MIN_VALUE), new Date(), 0.0, 0.0, "");
+        photos = findPhotos(new Date(Long.MIN_VALUE), new Date(), null, 0, "");
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
@@ -112,24 +112,34 @@ public class MainActivity extends AppCompatActivity {
         //}
     }
 
-    private ArrayList<String> findPhotos(Date startTimestamp, Date endTimestamp, Double longitude, Double latitude, String keywords) {
+    private ArrayList<String> findPhotos(Date startTimestamp, Date endTimestamp, Double[] coordinates, int radius, String keywords) {
         File file = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath(), "/Android/data/com.example.photogallery/files/Pictures");
         ArrayList<String> photos = new ArrayList<String>();
         File[] fList = file.listFiles();
         if (fList != null) {
             for (File f : fList) {
-                try {
-                    ExifInterface exif = new ExifInterface(f.getAbsolutePath());
-                    String lat = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-                    String lng = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-                    //System.out.format("Lat: %s, Long: %s\n", lat, lng);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (coordinates != null){
+                    try {
+                        ExifInterface exif = new ExifInterface(f.getAbsolutePath());
+                        String lat = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                        String latRef = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+                        String lng = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                        String lngRef = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+                        Double[] fileCoordinates = {0.0, 0.0};
+                        fileCoordinates[0] = getParsedCoordinates(lat, latRef.equals("S"));
+                        fileCoordinates[1] = getParsedCoordinates(lng, lngRef.equals("W"));
+                        System.out.println(distance(fileCoordinates, coordinates));
+                        if (!(distance(fileCoordinates, coordinates) < radius * 1000)){
+                            continue;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 if (((startTimestamp == null && endTimestamp == null) || (f.lastModified() >= startTimestamp.getTime()
                         && f.lastModified() <= endTimestamp.getTime())
-                ) && (keywords == "" || f.getPath().contains(keywords)))
+                ) && (keywords.equals("") || f.getPath().contains(keywords)))
                     photos.add(f.getPath());
             }
         }
@@ -161,10 +171,14 @@ public class MainActivity extends AppCompatActivity {
         ImageView iv = (ImageView) findViewById(R.id.ivGallery);
         TextView tv = (TextView) findViewById(R.id.tvTimestamp);
         EditText et = (EditText) findViewById(R.id.etCaption);
-        if (path == null || path == "") {
+        TextView tvLat = (TextView) findViewById(R.id.tvLatitude);
+        TextView tvLong = (TextView) findViewById(R.id.tvLongitude);
+        if (path == null || path.equals("")) {
             iv.setImageResource(R.mipmap.ic_launcher);
             et.setText("");
             tv.setText("");
+            tvLat.setText("");
+            tvLong.setText("");
         } else {
             iv.setImageBitmap(BitmapFactory.decodeFile(path));
             String[] attr = path.split("_");
@@ -200,10 +214,19 @@ public class MainActivity extends AppCompatActivity {
                     startTimestamp = null;
                     endTimestamp = null;
                 }
+                Double[] coordinates = null;
+                int radius = 0;
+                try {
+                    double longitude = data.getDoubleExtra("LONGITUDE", 0.0);
+                    double latitude = data.getDoubleExtra("LATITUDE", 0.0);
+                    radius = Integer.parseInt(String.valueOf(data.getIntExtra("RADIUS", 0)));
+                    if (longitude != 0.0 && latitude != 0.0 && radius != 0){
+                        coordinates = new Double[]{latitude, longitude};
+                    }
+                } catch (Exception e){}
                 String keywords = (String) data.getStringExtra("KEYWORDS");
                 index = 0;
-                double longitude = 0.0, latitude = 0.0;
-                photos = findPhotos(startTimestamp, endTimestamp, longitude, latitude, keywords);
+                photos = findPhotos(startTimestamp, endTimestamp, coordinates, radius, keywords);
                 if (photos.size() == 0) {
                     displayPhoto(null);
                 } else {
@@ -214,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             ImageView mImageView = (ImageView) findViewById(R.id.ivGallery);
             mImageView.setImageBitmap(BitmapFactory.decodeFile(mCurrentPhotoPath));
-            photos = findPhotos(new Date(Long.MIN_VALUE), new Date(), 0.0, 0.0, "");
+            photos = findPhotos(new Date(Long.MIN_VALUE), new Date(), null, 0, "");
         }
     }
 
@@ -242,16 +265,16 @@ public class MainActivity extends AppCompatActivity {
         String lng = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
         String lngRef = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
         if (lat != null && latRef != null && lng != null && lngRef != null){
-            Double lattitude = getParsedCoordinates(lat, latRef.equals("S"));
+            Double latitude = getParsedCoordinates(lat, latRef.equals("S"));
             Double longitude = getParsedCoordinates(lng, lngRef.equals("W"));
-            TextView lattitudeField = (TextView) findViewById(R.id.lattitude);
-            TextView longitudeField = (TextView) findViewById(R.id.longitude);
-            lattitudeField.setText(String.format(Locale.CANADA,"Lattitude: %.6f",lattitude));
+            TextView latitudeField = (TextView) findViewById(R.id.tvLatitude);
+            TextView longitudeField = (TextView) findViewById(R.id.tvLongitude);
+            latitudeField.setText(String.format(Locale.CANADA,"Latitude: %.6f",latitude));
             longitudeField.setText(String.format(Locale.CANADA,"Longitude: %.6f",longitude));
         }
     }
 
-    private Double getParsedCoordinates(String raw, boolean neg){
+    private static Double getParsedCoordinates(String raw, boolean neg){
         // raw = 49/1,2/1,29112/10000
         String[] fields = raw.split(",");
         // fields = [49/1, 2/1, 29112/10000]
@@ -264,5 +287,18 @@ public class MainActivity extends AppCompatActivity {
         accumulator += (double) Integer.parseInt(operands[0]) / (double) Integer.parseInt(operands[1]) / 3600;
         System.out.println(neg ? accumulator * -1 : accumulator);
         return neg ? accumulator * -1 : accumulator;
+    }
+
+    // Return distance between 2 points in meters
+    private static double distance(Double[] p1, Double[] p2){
+        final int R = 6371; // Radius of Earth
+        double latDistance = Math.toRadians(p2[0] - p1[0]);
+        double lonDistance = Math.toRadians(p2[1] - p1[1]);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + Math.cos(Math.toRadians(p1[0])) * Math.cos(Math.toRadians(p2[0])) * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+
+        distance = Math.pow(distance, 2);
+        return Math.sqrt(distance);
     }
 }
