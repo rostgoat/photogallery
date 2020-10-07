@@ -126,6 +126,9 @@ public class MainActivity extends AppCompatActivity {
                         String latRef = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
                         String lng = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
                         String lngRef = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+                        if (lat == null || lng == null || latRef == null || lngRef == null){
+                            continue;
+                        }
                         Double[] fileCoordinates = {0.0, 0.0};
                         fileCoordinates[0] = getParsedCoordinates(lat, latRef.equals("S"));
                         fileCoordinates[1] = getParsedCoordinates(lng, lngRef.equals("W"));
