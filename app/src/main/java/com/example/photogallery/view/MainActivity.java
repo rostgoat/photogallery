@@ -1,4 +1,4 @@
-package com.example.photogallery;
+package com.example.photogallery.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -20,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.photogallery.R;
+import com.example.photogallery.presenter.MainActivityPresenter;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -28,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityPresenter.View {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int SEARCH_ACTIVITY_REQUEST_CODE = 2;
@@ -36,10 +39,14 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> photos = null;
     private int index = 0;
 
+    private MainActivityPresenter mPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mPresenter = new MainActivityPresenter(this);
 
         photos = findPhotos(new Date(Long.MIN_VALUE), new Date(), null, 0, "");
 
@@ -244,15 +251,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updatePhoto(String path, String caption) {
-        String[] attr = path.split("_");
-        if (attr.length >= 3) {
-            File to = new File(attr[0] + "_" + caption + "_" + attr[2] + "_" + attr[3]);
-            File from = new File(path);
-            from.renameTo(to);
-            photos.set(index, to.toString());
-        }
-    }
+//    private void updatePhoto(String path, String caption) {
+//        String[] attr = path.split("_");
+//        if (attr.length >= 3) {
+//            File to = new File(attr[0] + "_" + caption + "_" + attr[2] + "_" + attr[3]);
+//            File from = new File(path);
+//            from.renameTo(to);
+//            photos.set(index, to.toString());
+//        }
+//    }
 
     private void addLocationTagging(String path) {
         ExifInterface exif = null;
@@ -303,5 +310,10 @@ public class MainActivity extends AppCompatActivity {
 
         distance = Math.pow(distance, 2);
         return Math.sqrt(distance);
+    }
+
+    @Override
+    public void updatePhoto(String path, String caption) {
+        mPresenter.updatePhoto(path,caption);
     }
 }
