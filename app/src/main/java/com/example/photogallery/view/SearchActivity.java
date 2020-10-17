@@ -10,13 +10,12 @@ import android.widget.EditText;
 import com.example.photogallery.R;
 import com.example.photogallery.presenter.SearchActivityPresenter;
 
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class SearchActivity extends AppCompatActivity implements SearchActivityPresenter.View {
+public class SearchActivity extends AppCompatActivity implements SearchActivityPresenter.View{
     private SearchActivityPresenter sPresenter;
 
     @Override
@@ -24,21 +23,13 @@ public class SearchActivity extends AppCompatActivity implements SearchActivityP
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         sPresenter = new SearchActivityPresenter(this);
+
         try {
-            Calendar calendar = Calendar.getInstance();
-            DateFormat format = new SimpleDateFormat("yyyy‐MM‐dd");
-            Date now = calendar.getTime();
-            String todayStr = new SimpleDateFormat("yyyy‐MM‐dd", Locale.getDefault()).format(now);
-            Date today = format.parse((String) todayStr);
-            calendar.add(Calendar.DAY_OF_YEAR, -1);
-            String yesterdayStr = new SimpleDateFormat("yyyy‐MM‐dd", Locale.getDefault()).format(calendar.getTime());
-            Date yesterday = format.parse((String) yesterdayStr);
-            ((EditText) findViewById(R.id.etFromDateTime)).setText(new SimpleDateFormat(
-                    "yyyy‐MM‐dd hh:mm", Locale.getDefault()).format(yesterday));
-            ((EditText) findViewById(R.id.etToDateTime)).setText(new SimpleDateFormat(
-                    "yyyy‐MM‐dd hh:mm", Locale.getDefault()).format(today));
-        } catch (Exception ex) {
+            sPresenter.setupCalendarDates();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
     }
 
     public void cancel(final View v) {
@@ -63,13 +54,14 @@ public class SearchActivity extends AppCompatActivity implements SearchActivityP
         finish();
     }
 
-    @Override
-    public void cancel() {
-
-    }
 
     @Override
-    public void go() {
-
+    public void setFromAndToDates(Date yesterday, Date today) {
+        ((EditText) findViewById(R.id.etFromDateTime)).setText(new SimpleDateFormat(
+        "yyyy‐MM‐dd hh:mm", Locale.getDefault()).format(yesterday));
+        ((EditText) findViewById(R.id.etToDateTime)).setText(new SimpleDateFormat(
+        "yyyy‐MM‐dd hh:mm", Locale.getDefault()).format(today));
     }
 }
+
+
