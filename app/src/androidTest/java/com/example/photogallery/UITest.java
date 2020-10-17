@@ -1,22 +1,14 @@
 package com.example.photogallery;
 
-import android.app.Activity;
-import android.app.Application;
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
-
-import androidx.core.content.FileProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.photogallery.view.MainActivity;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.File;
-import java.io.IOException;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;

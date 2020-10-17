@@ -7,7 +7,7 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
 
     <ImageView
         android:id="@+id/ivGallery"

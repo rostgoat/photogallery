@@ -1,34 +1,41 @@
-package com.example.photogallery;
+package com.example.photogallery.view;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.content.Intent; import android.os.Bundle;
-import android.view.View; import android.widget.EditText;
-import java.text.DateFormat; import java.text.SimpleDateFormat;
-import java.util.Calendar; import java.util.Date;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+
+import com.example.photogallery.R;
+import com.example.photogallery.presenter.SearchActivityPresenter;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
-public class SearchActivity extends AppCompatActivity {
+
+public class SearchActivity extends AppCompatActivity implements SearchActivityPresenter.View{
+    private SearchActivityPresenter sPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        sPresenter = new SearchActivityPresenter(this);
+
         try {
-            Calendar calendar = Calendar.getInstance();
-            DateFormat format = new SimpleDateFormat("yyyy‐MM‐dd");
-            Date now = calendar.getTime();
-            String todayStr = new SimpleDateFormat("yyyy‐MM‐dd", Locale.getDefault()).format(now);
-            Date today = format.parse((String) todayStr);
-            calendar.add(Calendar.DAY_OF_YEAR, -1);
-            String yesterdayStr = new SimpleDateFormat("yyyy‐MM‐dd", Locale.getDefault()).format( calendar.getTime());
-            Date yesterday = format.parse((String) yesterdayStr);
-            ((EditText) findViewById(R.id.etFromDateTime)).setText(new SimpleDateFormat(
-                    "yyyy‐MM‐dd hh:mm", Locale.getDefault()).format(yesterday));
-            ((EditText) findViewById(R.id.etToDateTime)).setText(new SimpleDateFormat(
-                    "yyyy‐MM‐dd hh:mm", Locale.getDefault()).format(today));
-        } catch (Exception ex) { }
+            sPresenter.setupCalendarDates();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
+
     public void cancel(final View v) {
         finish();
     }
+
     public void go(final View v) {
         Intent i = new Intent();
         EditText from = (EditText) findViewById(R.id.etFromDateTime);
@@ -46,4 +53,15 @@ public class SearchActivity extends AppCompatActivity {
         setResult(RESULT_OK, i);
         finish();
     }
+
+
+    @Override
+    public void setFromAndToDates(Date yesterday, Date today) {
+        ((EditText) findViewById(R.id.etFromDateTime)).setText(new SimpleDateFormat(
+        "yyyy‐MM‐dd hh:mm", Locale.getDefault()).format(yesterday));
+        ((EditText) findViewById(R.id.etToDateTime)).setText(new SimpleDateFormat(
+        "yyyy‐MM‐dd hh:mm", Locale.getDefault()).format(today));
+    }
 }
+
+
