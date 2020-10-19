@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.photogallery.LogAnnotation;
 import com.example.photogallery.R;
 import com.example.photogallery.presenter.MainActivityPresenter;
 
@@ -40,11 +41,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
 
     private MainActivityPresenter mPresenter;
 
+    @LogAnnotation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mPresenter = new MainActivityPresenter(this);
 
         photos = mPresenter.findPhotos(new Date(Long.MIN_VALUE), new Date(), null, 0, "");
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
         } else {
             displayPhoto(photos.get(index));
         }
+
     }
 
     private void checkPermissions(){
@@ -95,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
 
     }
 
+    @LogAnnotation
     public void searchPhoto(View view) {
         Intent searchIntent = new Intent(this, SearchActivity.class);
         startActivityForResult(searchIntent, SEARCH_ACTIVITY_REQUEST_CODE);
@@ -120,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
         //}
     }
 
+    @LogAnnotation
     public void scrollPhotos(View v) {
         if (photos.size() != 0) {
             updatePhoto(photos.get(index), ((EditText) findViewById(R.id.etCaption)).getText().toString());
