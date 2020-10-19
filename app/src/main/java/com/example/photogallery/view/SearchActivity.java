@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.photogallery.LogAnnotation;
 import com.example.photogallery.R;
 import com.example.photogallery.presenter.SearchActivityPresenter;
 
@@ -18,6 +19,7 @@ import java.util.Locale;
 public class SearchActivity extends AppCompatActivity implements SearchActivityPresenter.View{
     private SearchActivityPresenter sPresenter;
 
+    @LogAnnotation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,7 @@ public class SearchActivity extends AppCompatActivity implements SearchActivityP
         finish();
     }
 
+    @LogAnnotation
     public void go(final View v) {
         Intent i = new Intent();
         EditText from = (EditText) findViewById(R.id.etFromDateTime);
@@ -55,6 +58,7 @@ public class SearchActivity extends AppCompatActivity implements SearchActivityP
     }
 
 
+    @LogAnnotation
     @Override
     public void setFromAndToDates(Date yesterday, Date today) {
         ((EditText) findViewById(R.id.etFromDateTime)).setText(new SimpleDateFormat(
