@@ -1,12 +1,17 @@
 package com.example.photogallery.presenter;
 
 import android.media.ExifInterface;
+import android.os.Build;
 import android.os.Environment;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 public class MainActivityPresenter {
 
@@ -75,40 +80,40 @@ private final View view;
         return Math.sqrt(distance);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public ArrayList<String> findPhotos(Date startTimestamp, Date endTimestamp, Double[] coordinates, int radius, String keywords) {
         File file = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath(), "/Android/data/com.example.photogallery/files/Pictures");
         ArrayList<String> photos = new ArrayList<String>();
-        File[] fList = file.listFiles();
-        if (fList != null) {
-            for (File f : fList) {
-                if (coordinates != null){
-                    try {
-                        ExifInterface exif = new ExifInterface(f.getAbsolutePath());
-                        String lat = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-                        String latRef = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
-                        String lng = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-                        String lngRef = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
-                        if (lat == null || lng == null || latRef == null || lngRef == null){
-                            continue;
-                        }
-                        Double[] fileCoordinates = {0.0, 0.0};
-                        fileCoordinates[0] = getParsedCoordinates(lat, latRef.equals("S"));
-                        fileCoordinates[1] = getParsedCoordinates(lng, lngRef.equals("W"));
-                        System.out.println(distance(fileCoordinates, coordinates));
-                        if (!(distance(fileCoordinates, coordinates) < radius * 1000)){
-                            continue;
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        ArrayList<File> fList = new ArrayList<File>(Arrays.asList(Objects.requireNonNull(file.listFiles())));
+        // Functional lambda expression
+        fList.forEach( f -> {
+            if (coordinates != null){
+                try {
+                    ExifInterface exif = new ExifInterface(f.getAbsolutePath());
+                    String lat = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                    String latRef = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+                    String lng = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                    String lngRef = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+                    if (lat == null || lng == null || latRef == null || lngRef == null){
+                        return;
                     }
+                    Double[] fileCoordinates = {0.0, 0.0};
+                    fileCoordinates[0] = getParsedCoordinates(lat, latRef.equals("S"));
+                    fileCoordinates[1] = getParsedCoordinates(lng, lngRef.equals("W"));
+                    System.out.println(distance(fileCoordinates, coordinates));
+                    if (!(distance(fileCoordinates, coordinates) < radius * 1000)){
+                        return;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                if (((startTimestamp == null && endTimestamp == null) || (f.lastModified() >= startTimestamp.getTime()
-                        && f.lastModified() <= endTimestamp.getTime())
-                ) && (keywords.equals("") || f.getPath().contains(keywords)))
-                    photos.add(f.getPath());
             }
-        }
+            if (((startTimestamp == null && endTimestamp == null) || (f.lastModified() >= startTimestamp.getTime()
+                    && f.lastModified() <= endTimestamp.getTime())
+            ) && (keywords.equals("") || f.getPath().contains(keywords)))
+                photos.add(f.getPath());
+        });
         return photos;
     }
 
