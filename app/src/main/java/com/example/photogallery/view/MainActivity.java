@@ -1,4 +1,4 @@
-package com.example.photogallery;
+package com.example.photogallery.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -10,7 +10,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,14 +20,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.photogallery.LogAnnotation;
+import com.example.photogallery.R;
+import com.example.photogallery.presenter.MainActivityPresenter;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityPresenter.View {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int SEARCH_ACTIVITY_REQUEST_CODE = 2;
@@ -36,18 +40,18 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> photos = null;
     private int index = 0;
 
+    private MainActivityPresenter mPresenter;
+
+    @LogAnnotation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mPresenter = new MainActivityPresenter(this);
 
-        photos = findPhotos(new Date(Long.MIN_VALUE), new Date(), "");
+        photos = mPresenter.findPhotos(new Date(Long.MIN_VALUE), new Date(), null, 0, "");
 
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {
-                    Manifest.permission.CAMERA
-            }, 1000);
-        }
+        checkPermissions();
 
         if (photos.size() == 0) {
             displayPhoto(null);
@@ -57,9 +61,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    private void checkPermissions(){
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    Manifest.permission.CAMERA
+            }, 1000);
+        }
+
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            }, 1001);
+        }
+    }
+
     public void sharingToSocialMedia(View v) {
 
-        try{
+        try {
             File file = new File(photos.get(index));
             Uri bmpUri = FileProvider.getUriForFile(this, "com.example.photogallery.fileprovider", file);
             //Todo: Commenting this out for now, uncomment it to show it the Caption as well, works on Twitter
@@ -74,14 +93,15 @@ public class MainActivity extends AppCompatActivity {
             shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(Intent.createChooser(shareIntent, "Share images using"));
 
-        }catch (android.content.ActivityNotFoundException ex){
+        } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(getApplicationContext(), "Please install the application first", Toast.LENGTH_LONG).show();
         }
 
     }
 
+    @LogAnnotation
     public void searchPhoto(View view) {
-         Intent searchIntent = new Intent(this, SearchActivity.class);
+        Intent searchIntent = new Intent(this, SearchActivity.class);
         startActivityForResult(searchIntent, SEARCH_ACTIVITY_REQUEST_CODE);
     }
 
@@ -90,45 +110,28 @@ public class MainActivity extends AppCompatActivity {
         // Ensure that there is a camera activity to handle the intent
         //Todo: Commenting this out for now to allow pictures to work. Not sure why it is always null
         //if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.example.photogallery.fileprovider", photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-
-                new AlertDialog.Builder(this)
-                        .setTitle("Picture snapped succesfully and saved!")
-                        .setMessage("Saved to SD card.")
-                        .show();
-
-            }
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException ex) {
+            // Error occurred while creating the File
+        }
+        // Continue only if the File was successfully created
+        if (photoFile != null) {
+            Uri photoURI = FileProvider.getUriForFile(this, "com.example.photogallery.fileprovider", photoFile);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            new AlertDialog.Builder(this)
+                    .setTitle("Picture snapped succesfully and saved!")
+                    .setMessage("Saved to SD card.")
+                    .show();
+        }
         //}
     }
 
-    private ArrayList<String> findPhotos(Date startTimestamp, Date endTimestamp, String keywords) {
-        File file = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath(), "/Android/data/com.example.photogallery/files/Pictures");
-        ArrayList<String> photos = new ArrayList<String>();
-        File[] fList = file.listFiles();
-        if (fList != null) {
-            for (File f : fList) {
-                if (((startTimestamp == null && endTimestamp == null) || (f.lastModified() >= startTimestamp.getTime()
-                        && f.lastModified() <= endTimestamp.getTime())
-                ) && (keywords == "" || f.getPath().contains(keywords)))
-                    photos.add(f.getPath());
-            }
-        }
-        return photos;
-    }
-
+    @LogAnnotation
     public void scrollPhotos(View v) {
-        if (photos.size() != 0){
+        if (photos.size() != 0) {
             updatePhoto(photos.get(index), ((EditText) findViewById(R.id.etCaption)).getText().toString());
             switch (v.getId()) {
                 case R.id.btnPrev:
@@ -152,28 +155,27 @@ public class MainActivity extends AppCompatActivity {
         ImageView iv = (ImageView) findViewById(R.id.ivGallery);
         TextView tv = (TextView) findViewById(R.id.tvTimestamp);
         EditText et = (EditText) findViewById(R.id.etCaption);
-        if (path == null || path == "") {
+        TextView tvLat = (TextView) findViewById(R.id.tvLatitude);
+        TextView tvLong = (TextView) findViewById(R.id.tvLongitude);
+        if (path == null || path.equals("")) {
             iv.setImageResource(R.mipmap.ic_launcher);
             et.setText("");
             tv.setText("");
+            tvLat.setText("");
+            tvLong.setText("");
         } else {
             iv.setImageBitmap(BitmapFactory.decodeFile(path));
             String[] attr = path.split("_");
             et.setText(attr[1]);
             tv.setText(attr[2]);
+            addLocationTagging(path);
         }
-
-//        try {
-//            addLocationTagging(path);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_ " + timeStamp + " _ ";
+        String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
         mCurrentPhotoPath = image.getAbsolutePath();
@@ -186,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == SEARCH_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 DateFormat format = new SimpleDateFormat("yyyy‐MM‐dd HH:mm:ss");
-                Date startTimestamp , endTimestamp;
+                Date startTimestamp, endTimestamp;
                 try {
                     String from = (String) data.getStringExtra("STARTTIMESTAMP");
                     String to = (String) data.getStringExtra("ENDTIMESTAMP");
@@ -196,9 +198,19 @@ public class MainActivity extends AppCompatActivity {
                     startTimestamp = null;
                     endTimestamp = null;
                 }
+                Double[] coordinates = null;
+                int radius = 0;
+                try {
+                    double longitude = data.getDoubleExtra("LONGITUDE", 0.0);
+                    double latitude = data.getDoubleExtra("LATITUDE", 0.0);
+                    radius = Integer.parseInt(String.valueOf(data.getIntExtra("RADIUS", 0)));
+                    if (longitude != 0.0 && latitude != 0.0 && radius != 0){
+                        coordinates = new Double[]{latitude, longitude};
+                    }
+                } catch (Exception e){}
                 String keywords = (String) data.getStringExtra("KEYWORDS");
                 index = 0;
-                photos = findPhotos(startTimestamp, endTimestamp, keywords);
+                photos = mPresenter.findPhotos(startTimestamp, endTimestamp, coordinates, radius, keywords);
                 if (photos.size() == 0) {
                     displayPhoto(null);
                 } else {
@@ -209,32 +221,25 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             ImageView mImageView = (ImageView) findViewById(R.id.ivGallery);
             mImageView.setImageBitmap(BitmapFactory.decodeFile(mCurrentPhotoPath));
-            photos = findPhotos(new Date(Long.MIN_VALUE), new Date(), "");
+            photos = mPresenter.findPhotos(new Date(Long.MIN_VALUE), new Date(), null, 0, "");
         }
     }
 
-    private void updatePhoto(String path, String caption) {
-        String[] attr = path.split("_");
-        if (attr.length >= 3) {
-            File to = new File(attr[0] + "_" + caption + "_" + attr[2] + "_" + attr[3]);
-            File from = new File(path);
-            from.renameTo(to);
-            photos.set(index,to.toString());
-        }
+    private void addLocationTagging(String path) {
+        mPresenter.extractLocationCoordinates(path);
     }
 
-    private void addLocationTagging(String path) throws IOException {
 
-        ExifInterface exif = new ExifInterface(path);
+    @Override
+    public void updatePhoto(String path, String caption) {
+        mPresenter.updatePhoto(path,caption,photos,index);
+    }
 
-        String lat = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-
-        String lng = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-
-        TextView locationText = (TextView) findViewById(R.id.locationText);
-        locationText.setText("Latitude: " +lat + ", Longitude: " + lng);
-
-        Toast.makeText(getApplicationContext(),", Latitude: " +lat + "Longitude: " + lng,Toast.LENGTH_SHORT).show();
-
+    @Override
+    public void showLatitudeAndLongitude(Double latitude, Double longitude) {
+        TextView latitudeField = (TextView) findViewById(R.id.tvLatitude);
+        TextView longitudeField = (TextView) findViewById(R.id.tvLongitude);
+        latitudeField.setText(String.format(Locale.CANADA,"Latitude: %.6f",latitude));
+        longitudeField.setText(String.format(Locale.CANADA,"Longitude: %.6f",longitude));
     }
 }

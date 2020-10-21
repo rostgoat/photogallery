@@ -1,54 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res‐auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
-    <TextView
-        android:id="@+id/tvFromDateTime"  android:text="From: "
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/etFromDateTime" android:layout_alignStart="@+id/btnCancel"
-        android:textSize="24sp" />
-    <EditText
-        android:id="@+id/etFromDateTime" android:inputType="date"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true" android:layout_alignParentTop="true"
-        android:layout_marginTop="38dp" android:ems="10" android:textSize="24sp" />
-    <TextView
-        android:id="@+id/tvToDateTime"  android:text="To: "
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" android:layout_alignStart="@+id/tvFromDateTime"
-        android:layout_marginTop="98dp" android:textSize="24sp" />
-    <EditText
-        android:id="@+id/etToDateTime" android:inputType="date"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tvToDateTime" android:layout_alignParentEnd="true"
-        android:layout_marginEnd="31dp" android:ems="10"
-        android:textSize="24sp" />
-    <TextView
-        android:id="@+id/tvKeywords" android:text="Keywords: "
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvFromDateTime" android:layout_centerVertical="true"
-        android:textSize="24sp" />
-    <EditText
-        android:id="@+id/etKeywords" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_alignStart="@+id/go"
-        android:layout_centerVertical="true" android:ems="10"
-        android:textSize="24sp" />
-    <Button
-        android:id="@+id/btnCancel" android:text="Cancel" android:onClick="cancel"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" android:layout_marginRight="55dp"
-        android:layout_marginEnd="55dp" />
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    android:orientation="vertical"
+    tools:context=".view.SearchActivity">
 
-    <Button
-        android:id="@+id/go"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/btnCancel"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="128dp"
-        android:onClick="go"
-        android:text="Go" />
-</RelativeLayout>
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvFromDateTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="From: "
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/etFromDateTime"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvToDateTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="To: "
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/etToDateTime"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvKeywords"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Keywords: "
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/etKeywords"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvLattitude"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Lattitude:"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/etLatitude"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberSigned|numberDecimal"
+            android:numeric="signed|decimal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvLongitude"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Longitude:"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/etLongitude"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberSigned|numberDecimal"
+            android:numeric="signed|decimal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvRadius"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Radius (km):"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/etRadius"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="55dp"
+            android:layout_weight="1"
+            android:onClick="cancel"
+            android:text="Cancel" />
+
+        <Button
+            android:id="@+id/go"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="go"
+            android:text="Search" />
+    </LinearLayout>
+
+</LinearLayout>
