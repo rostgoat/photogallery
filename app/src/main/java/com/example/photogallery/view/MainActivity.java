@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
         }
 
     }
+
 
     private void checkPermissions(){
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -119,6 +121,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
             Uri photoURI = FileProvider.getUriForFile(this, "com.example.photogallery.fileprovider", photoFile);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            new AlertDialog.Builder(this)
+                    .setTitle("Picture snapped succesfully and saved!")
+                    .setMessage("Saved to SD card.")
+                    .show();
         }
         //}
     }
