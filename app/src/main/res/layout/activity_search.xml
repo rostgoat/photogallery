@@ -27,7 +27,10 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:textSize="24sp" />
+            android:hint="Enter From Date"
+            android:inputType="datetime"
+            android:textSize="24sp"
+            tools:ignore="Autofill" />
     </LinearLayout>
 
     <LinearLayout
@@ -48,7 +51,10 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:textSize="24sp" />
+            android:hint="Enter To Date"
+            android:inputType="datetime"
+            android:textSize="24sp"
+            tools:ignore="Autofill" />
     </LinearLayout>
 
     <LinearLayout
@@ -70,7 +76,10 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:textSize="24sp" />
+            android:hint="Enter Caption"
+            android:inputType="none|textNoSuggestions"
+            android:textSize="24sp"
+            tools:ignore="Autofill" />
     </LinearLayout>
 
     <LinearLayout
@@ -84,7 +93,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Lattitude:"
+            android:text="Latitude:"
             android:textSize="24sp" />
 
         <EditText
@@ -92,8 +101,10 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:hint="Enter Latitude"
             android:inputType="numberSigned|numberDecimal"
-            android:numeric="signed|decimal" />
+            android:numeric="signed|decimal"
+            tools:ignore="Autofill" />
     </LinearLayout>
 
     <LinearLayout
@@ -114,8 +125,10 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:hint="Enter Longitude"
             android:inputType="numberSigned|numberDecimal"
-            android:numeric="signed|decimal" />
+            android:numeric="signed|decimal"
+            tools:ignore="Autofill" />
 
     </LinearLayout>
 
@@ -137,7 +150,9 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="number" />
+            android:hint="Enter Radius"
+            android:inputType="number"
+            tools:ignore="Autofill" />
     </LinearLayout>
 
     <LinearLayout
@@ -153,7 +168,8 @@
             android:layout_marginEnd="55dp"
             android:layout_weight="1"
             android:onClick="cancel"
-            android:text="Cancel" />
+            android:text="Cancel"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/go"
@@ -161,7 +177,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="go"
-            android:text="Search" />
+            android:text="Search"
+            tools:ignore="ButtonStyle" />
     </LinearLayout>
 
 </LinearLayout>
