@@ -169,7 +169,8 @@
             android:layout_weight="1"
             android:onClick="cancel"
             android:text="Cancel"
-            tools:ignore="ButtonStyle" />
+            tools:ignore="ButtonStyle"
+            android:layout_marginRight="55dp" />
 
         <Button
             android:id="@+id/go"

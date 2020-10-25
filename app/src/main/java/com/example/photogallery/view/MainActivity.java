@@ -1,5 +1,6 @@
 package com.example.photogallery.view;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
 
     private MainActivityPresenter mPresenter;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @LogAnnotation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
         return image;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
